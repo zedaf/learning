@@ -17,7 +17,7 @@ class Example3 {
 		var = var /4;
 		x = x /4;
 		
-		System.out.println("var after div: " + var);
-		System.out.println("x after div: " + x);
+		System.out.println("var after div by 2: " + var);
+		System.out.println("x after div by 2 : " + x);
 	}
 }
