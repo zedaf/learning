@@ -4,6 +4,13 @@ class NewVehicle {
 	int fuelcap;
 	int mpg;
 	
+	// Constructor
+	NewVehicle(int p, int f, int m) {
+		passengers = p;
+		fuelcap = f;
+		mpg = m;
+	}
+	
 	int calcRange() {
 		return fuelcap * mpg;
 	}
@@ -18,17 +25,9 @@ class TwoVehicles {
 		int dist = 252;
 		double gallons;
 		
-		NewVehicle minivan = new NewVehicle();
-		NewVehicle sportscar = new NewVehicle();
-		
-		minivan.passengers = 7;
-		minivan.fuelcap = 16;
-		minivan.mpg = 21;
-		
-		sportscar.passengers = 2;
-		sportscar.fuelcap = 14;
-		sportscar.mpg = 12;
-		
+		NewVehicle minivan = new NewVehicle(7, 16, 21);
+		NewVehicle sportscar = new NewVehicle(2, 14, 12);
+				
 		System.out.println("Minivan can carry " + minivan.passengers + " with a range of " + minivan.calcRange() + ".");
 		gallons = minivan.fuelneeded(dist);
 		System.out.println("To go " + dist + " miles minivan needs " + gallons + " gallons of fuel.");
