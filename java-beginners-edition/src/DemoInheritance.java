@@ -1,6 +1,9 @@
-class TwoDShape {
+import org.w3c.dom.css.Rect;
+
+abstract class TwoDShape {
     private double width;
     private double height;
+    private String name;
 
     // Default Constructor
     TwoDShape() {
@@ -8,23 +11,35 @@ class TwoDShape {
     }
 
     // Construct object with equal width and height
-    TwoDShape(double x) {
+    TwoDShape(double x, String n) {
         width = height = x;
+        name = "none";
     }
-    TwoDShape(double w, double h) {
+    TwoDShape(double w, double h, String n) {
         width = w;
         height = w;
+        name = n;
     }
 
+    TwoDShape(TwoDShape ob) {
+        width = ob.width;
+        height = ob.height;
+        name = ob.name;
+    }
+
+    // Accessor methods
     double getWidth() { return width; }
     double getHeight() { return height; }
-
     void setWidth(double w) { width = w; }
     void setHeight(double h) { height = h; }
+    String getName() { return name; }
 
     void showDim() {
         System.out.println("Width and height are " + width + " and " + height);
     }
+
+    // area() is now abstract
+    abstract double area();
 }
 
 // subclass of TwoDShape for triangles
@@ -38,15 +53,21 @@ class Triangle extends TwoDShape {
     }
     //Constructor
     Triangle(String s, double w, double h) {
-        super(w, h);
+        super(w, h, "triangle");
 
         style = s;
     }
 
     // one argument constructor
     Triangle(double x) {
-        super(x); // calls superclass constructor
+        super(x, "triangle"); // calls superclass constructor
         style = "filled";
+    }
+
+    // Construct object from an object
+    Triangle(Triangle ob) {
+        super(ob); // pass object to TwoDShape
+        style = ob.style;
     }
 
     double area() {
@@ -55,6 +76,37 @@ class Triangle extends TwoDShape {
 
     void showStyle() {
         System.out.println("Triangle is " + style);
+    }
+}
+
+class Rectangle extends TwoDShape {
+    // A default constructor
+    Rectangle() {
+        super();
+    }
+
+    //Constructor for rectangle
+    Rectangle(double w, double h) {
+        super(w, h, "rectangle"); // call superclass constructor
+    }
+
+    //construct a square
+    Rectangle(double x) {
+        super(x, "rectangle"); // call superclass constructor
+    }
+
+    //construct an object from an object
+    Rectangle(Rectangle ob) {
+        super(ob); //pass obj to TwoDShape constructor
+    }
+
+    boolean isSquare() {
+        if(getWidth() == getHeight()) return true;
+        return false;
+    }
+
+    double area() {
+        return getWidth() * getHeight();
     }
 }
 
