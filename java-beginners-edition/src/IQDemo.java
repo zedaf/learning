@@ -10,19 +10,17 @@ class  FixedQueue implements ICharQ {
         putloc = getloc = 0;
     }
 
-    public void put(char ch) {
+    public void put(char ch) throws QueueFullException {
         if(putloc == q.length) {
-            System.out.println(" - queue is full.");
-            return;
+            throw new QueueFullException(q.length);
         }
 
         q[putloc++] = ch;
     }
 
-    public char get() {
+    public char get()  throws QueueEmptyException {
         if(getloc == putloc) {
-            System.out.println(" - queue is empty.");
-            return (char) 0;
+            throw new QueueEmptyException();
         }
 
         return q[getloc++];
@@ -38,23 +36,21 @@ class CircularQueue implements ICharQ {
         putloc = getloc = 0;
     }
 
-    public void put(char ch) {
+    public void put(char ch) throws QueueFullException {
         /* queue is full if either putloc is one less than getloc, or if putloc is at the end of
            the array and getloc is at the beginning
          */
         if(putloc+1 == getloc | ((putloc==q.length) & (getloc==0))) {
-            System.out.println(" - queue is full.");
-            return;
+            throw new QueueFullException(q.length);
         }
 
         q[putloc++] = ch;
         if(putloc == q.length) putloc=0; //loop back
     }
 
-    public char get() {
+    public char get() throws QueueEmptyException {
         if(getloc == putloc) {
-            System.out.println(" - queue is empty.");
-            return (char) 0;
+            throw new QueueEmptyException();
         }
 
         char ch = q[getloc++];
@@ -87,10 +83,9 @@ class DynQueue implements ICharQ {
         q[putloc++] = ch;
     }
 
-    public char get() {
+    public char get() throws QueueEmptyException{
         if (getloc == putloc) {
-            System.out.println(" - queue is empty.");
-            return (char) 0;
+            throw new QueueEmptyException();
         }
 
         return q[getloc++];
@@ -98,7 +93,7 @@ class DynQueue implements ICharQ {
 }
 
 class IQDemo {
-    public static void main(String args[]) {
+    public static void main(String args[])  {
         FixedQueue q1 = new FixedQueue(10);
         DynQueue q2 = new DynQueue(5);
         CircularQueue q3 = new CircularQueue(10);
@@ -111,61 +106,105 @@ class IQDemo {
         iQ = q1;
 
         // put some chars into fixed queue
-        for(i = 0; i < 10; i++)
-            iQ.put((char) ('A' + i));
-
+        for(i = 0; i < 13; i++) {
+            try {
+                iQ.put((char) ('A' + i));
+            } catch (QueueFullException exc) {
+                System.out.println(exc);
+            }
+        }
         //Show the queue
         System.out.print("Contents of fixed queue");
         for(i = 0; i < 10; i++) {
-            ch = iQ.get();
-            System.out.print(ch);
+            try {
+                ch = iQ.get();
+                System.out.print(ch);
+            }
+            catch (QueueEmptyException exc) {
+                System.out.println(exc);
+            }
         }
         System.out.println();
 
         iQ = q2;
         //Put some chars into dyn queue
-        for(i = 0; i < 10; i++)
-            iQ.put((char) ('Z' - i));
+        for(i = 0; i < 10; i++) {
+            try {
+                iQ.put((char) ('Z' - i));
+            } catch (QueueFullException exc) {
+                System.out.println(exc);
+            }
+        }
 
         //show the queue
         System.out.print("Contents of dyn queue");
         for(i = 0; i < 10; i++) {
-            ch = iQ.get();
-            System.out.print(ch);
+            try {
+                ch = iQ.get();
+                System.out.print(ch);
+            }
+            catch(QueueEmptyException exc) {
+                System.out.println(exc);
+            }
         }
         System.out.println();
 
         iQ = q3;
         //put some chars in circular queue
-        for(i = 0; i < 10; i++)
-            iQ.put((char) ('A' + i));
+        for(i = 0; i < 10; i++) {
+            try {
+                iQ.put((char) ('A' + i));
+            } catch (QueueFullException exc) {
+                System.out.println(exc);
+            }
+        }
 
         //show it
         System.out.print("Contents of circular queue:");
         for(i = 0; i < 10; i++) {
-            ch = iQ.get();
-            System.out.print(ch);
+            try {
+                ch = iQ.get();
+                System.out.print(ch);
+            }
+            catch (QueueEmptyException exc) {
+                System.out.println(exc);
+            }
         }
 
         System.out.println();
 
         // put more chars into circular queue
-        for(i = 10; i < 20; i++)
-            iQ.put((char) ('A' + i ));
+        for(i = 10; i < 20; i++) {
+            try {
+                iQ.put((char) ('A' + i));
+            } catch (QueueFullException exc) {
+                System.out.println(exc);
+            }
+        }
 
         //show queue
         System.out.print("Contents of circular queue:");
         for(i=0; i<10;i++) {
-            ch = iQ.get();
-            System.out.print(ch);
+            try {
+                ch = iQ.get();
+                System.out.print(ch);
+            }
+            catch (QueueEmptyException exc) {
+                System.out.println(exc);
+            }
         }
 
         System.out.println("\nStore and consume from circular queue.");
 
         for(i=0; i < 20; i++) {
-            iQ.put((char) ('A' + i));
-            ch = iQ.get();
-            System.out.print(ch);
+            try {
+                iQ.put((char) ('A' + i));
+                ch = iQ.get();
+                System.out.print(ch);
+            }
+            catch (QueueEmptyException | QueueFullException exc) {
+                System.out.println(exc);
+            }
         }
     }
 }
